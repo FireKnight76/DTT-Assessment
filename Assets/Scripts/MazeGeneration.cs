@@ -131,6 +131,19 @@ public class MazeGeneration : MonoBehaviour
 
             StartCoroutine(GenerateMaze(chosenCell));
         }
+        else if (possibleDirections.Count == 0)
+        {
+            visitedCells.Remove(currentcell);
+            completedCells.Add(currentcell);
+            currentcell.SetState(cellState.Completed);
+
+            if (visitedCells.Count > 0)
+            {
+                StartCoroutine(GenerateMaze(visitedCells[visitedCells.Count - 1]));
+            }
+        }
+
+
     }
 
     //method to turn the input of the input fields into integers for the maze generation
