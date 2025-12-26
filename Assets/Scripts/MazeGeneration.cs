@@ -20,45 +20,35 @@ public class MazeGeneration : MonoBehaviour
     int x;
     int z;
 
-    //bool isGenerating = false;
     bool createPath = false;
 
-    // Update is called once per frame
-    void Update()
+
+    public void StartMazeCreation()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+        createPath = true;
+
+        InputToInt(xSize, zSize);
+
+        if((x >= 10 && x <= 250) && (z >= 10 && z <= 250))
         {
-            createPath = true;
+            ClearCells();
 
-            InputToInt(xSize, zSize);
+            GenerateGrid(x, z);
 
-            if((x >= 10 && x <= 250) && (z >= 10 && z <= 250))
+            if (createPath)
             {
-                
+                visitedCells.Clear();
+                completedCells.Clear();
 
-                ClearCells();
+                StartCoroutine(GenerateMaze(mazeGrid[Random.Range(0, x), Random.Range(0, z)]));
 
-                GenerateGrid(x, z);
-
-                if (createPath)
-                {
-                    visitedCells.Clear();
-                    completedCells.Clear();
-
-
-                    StartCoroutine(GenerateMaze(mazeGrid[Random.Range(0, x), Random.Range(0, z)]));
-
-                    createPath = false;
-                }
-
-            }
-            else
-            {
-                print("invalid values");
+                createPath = false;
             }
         }
-
-
+        else
+        {
+            print("invalid values");
+        }
     }
 
     //Method to generate a grid of cells that will be used to create the maze later
@@ -78,7 +68,6 @@ public class MazeGeneration : MonoBehaviour
                 currentCell.gridZ = j;
 
                 mazeGrid[i, j] = currentCell;
-
             }
         }
     }
