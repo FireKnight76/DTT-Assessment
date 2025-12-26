@@ -32,7 +32,7 @@ public class MazeCell : MonoBehaviour
 
     public void RemoveBackWall()
     {
-        NegXWall.gameObject.SetActive(false);
+        NegZWall.gameObject.SetActive(false);
     }
 
 
