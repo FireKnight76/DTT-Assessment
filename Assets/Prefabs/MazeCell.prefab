@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 815536801113860238}
   m_Layer: 0
   m_Name: MazeCell
-  m_TagString: Untagged
+  m_TagString: MazeCell
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -166,6 +166,8 @@ MonoBehaviour:
   PosZWall: {fileID: 8976159682062289804}
   NegZWall: {fileID: 6149744763826944853}
   floor: {fileID: 6725488324230887747}
+  gridX: 0
+  gridZ: 0
 --- !u!1 &4656842503033973766
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,6 +12,7 @@ public class MazeGeneration : MonoBehaviour
 
     //the multidimensional array to contain the createed cells
     MazeCell[,] mazeGrid;
+    GameObject[] clearCells;
 
     List<MazeCell> visitedCells = new List<MazeCell>();
     List<MazeCell> completedCells = new List<MazeCell>();
@@ -28,6 +29,8 @@ public class MazeGeneration : MonoBehaviour
 
             if((x >= 10 && x <= 250) && (z >= 10 && z <= 250))
             {
+                ClearCells();
+
                 GenerateGrid(x, z);
 
                 StartCoroutine(GenerateMaze(mazeGrid[Random.Range(0, x), Random.Range(0, z)]));
@@ -65,8 +68,6 @@ public class MazeGeneration : MonoBehaviour
 
     private IEnumerator GenerateMaze(MazeCell currentcell)
     {
-
-        print("Start Generation");
 
         List<int> possibleDirections = new List<int>();
         List<MazeCell> possibleCells = new List<MazeCell>();
@@ -110,40 +111,50 @@ public class MazeGeneration : MonoBehaviour
         //checks if the cell is all the way at the top
         if (z > 0)
         {
-            if (visitedCells.Contains(mazeGrid[x, z - 1]) && !completedCells.Contains(mazeGrid[x, z - 1]))
+            if (!visitedCells.Contains(mazeGrid[x, z - 1]) && !completedCells.Contains(mazeGrid[x, z - 1]))
             {
                 possibleDirections.Add(4);
                 possibleCells.Add(mazeGrid[x, z - 1]);
             }
         }
 
-        yield return new WaitForSeconds(0.01f);
+        yield return new WaitForSeconds(0.1f);
 
-        if (possibleDirections.Count > 0)
+        if (possibleCells.Count > 0)
         {
             int chosenDirection = Random.Range(0, possibleDirections.Count);
             MazeCell chosenCell = possibleCells[chosenDirection];
 
-            print(chosenDirection);
+            //print(chosenDirection);
 
             chosenCell.SetState(cellState.Passed);
             visitedCells.Add(chosenCell);
 
-            StartCoroutine(GenerateMaze(chosenCell));
+            yield return StartCoroutine(GenerateMaze(chosenCell));
         }
-        else if (possibleDirections.Count == 0)
+        else if (possibleCells.Count == 0)
         {
-            visitedCells.Remove(currentcell);
             completedCells.Add(currentcell);
+            visitedCells.Remove(currentcell);
             currentcell.SetState(cellState.Completed);
 
             if (visitedCells.Count > 0)
             {
-                StartCoroutine(GenerateMaze(visitedCells[visitedCells.Count - 1]));
+                yield return StartCoroutine(GenerateMaze(visitedCells[visitedCells.Count - 1]));
             }
         }
 
 
+    }
+
+    void ClearCells()
+    {
+        clearCells = GameObject.FindGameObjectsWithTag("MazeCell");
+
+        foreach(GameObject g in clearCells)
+        {
+            Destroy(g);
+        }
     }
 
     //method to turn the input of the input fields into integers for the maze generation
