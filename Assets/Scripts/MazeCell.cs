@@ -15,6 +15,9 @@ public class MazeCell : MonoBehaviour
     [SerializeField] private GameObject NegZWall;
     [SerializeField] private MeshRenderer floor;
 
+    public int gridX;
+    public int gridZ;
+
     public void RemoveRightWall()
     {
         PosXWall.gameObject.SetActive(false);
