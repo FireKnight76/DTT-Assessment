@@ -35,6 +35,19 @@ public class MazeCell : MonoBehaviour
         NegZWall.gameObject.SetActive(false);
     }
 
-
+    public void SetState(cellState state)
+    {
+        switch (state) 
+        {
+            case cellState.Available:
+                floor.material.color = Color.white; 
+                break;
+            case cellState.Passed:
+                floor.material.color = Color.yellow;
+                break;
+            case cellState.Completed:
+                floor.material.color = Color.green;
+                break;
+        }
 
 }
