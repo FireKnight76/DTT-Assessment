@@ -37,10 +37,10 @@ public class MazeCell : MonoBehaviour
 
     public void SetState(cellState state)
     {
-        switch (state) 
+        switch (state)
         {
             case cellState.Available:
-                floor.material.color = Color.white; 
+                floor.material.color = Color.white;
                 break;
             case cellState.Passed:
                 floor.material.color = Color.yellow;
@@ -49,5 +49,6 @@ public class MazeCell : MonoBehaviour
                 floor.material.color = Color.green;
                 break;
         }
+    }
 
 }
