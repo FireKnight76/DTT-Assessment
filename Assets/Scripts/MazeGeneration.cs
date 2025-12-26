@@ -20,20 +20,37 @@ public class MazeGeneration : MonoBehaviour
     int x;
     int z;
 
+    //bool isGenerating = false;
+    bool createPath = false;
+
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
+            createPath = true;
+
             InputToInt(xSize, zSize);
 
             if((x >= 10 && x <= 250) && (z >= 10 && z <= 250))
             {
+                
+
                 ClearCells();
 
                 GenerateGrid(x, z);
 
-                StartCoroutine(GenerateMaze(mazeGrid[Random.Range(0, x), Random.Range(0, z)]));
+                if (createPath)
+                {
+                    visitedCells.Clear();
+                    completedCells.Clear();
+
+
+                    StartCoroutine(GenerateMaze(mazeGrid[Random.Range(0, x), Random.Range(0, z)]));
+
+                    createPath = false;
+                }
+
             }
             else
             {
@@ -118,14 +135,37 @@ public class MazeGeneration : MonoBehaviour
             }
         }
 
+        //delays the method to show the generationa and prevent a StackOverflowException
         yield return new WaitForSeconds(0.1f);
 
+        //checks if any of the spots next to the currentcell are available
         if (possibleCells.Count > 0)
         {
             int chosenDirection = Random.Range(0, possibleDirections.Count);
             MazeCell chosenCell = possibleCells[chosenDirection];
 
-            //print(chosenDirection);
+            //breaks down the walls between cells to create a visual path
+            switch (possibleDirections[chosenDirection])
+            {
+                case 1:
+                    chosenCell.RemoveLeftWall();
+                    currentcell.RemoveRightWall();
+                    break;
+                case 2:
+                    chosenCell.RemoveRightWall();
+                    currentcell.RemoveLeftWall();
+                    break;
+                case 3:
+                    chosenCell.RemoveBackWall();
+                    currentcell.RemoveFrontWall();
+                    break;
+                case 4:
+                    chosenCell.RemoveFrontWall();
+                    currentcell.RemoveBackWall();
+                    break;
+            }
+
+
 
             chosenCell.SetState(cellState.Passed);
             visitedCells.Add(chosenCell);
@@ -143,6 +183,7 @@ public class MazeGeneration : MonoBehaviour
                 yield return StartCoroutine(GenerateMaze(visitedCells[visitedCells.Count - 1]));
             }
         }
+
 
 
     }
