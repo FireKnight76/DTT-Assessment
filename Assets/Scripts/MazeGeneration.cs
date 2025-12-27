@@ -2,7 +2,9 @@ using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MazeGeneration : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class MazeGeneration : MonoBehaviour
     [SerializeField] GameObject maze;
     [SerializeField] TMP_InputField xSize;
     [SerializeField] TMP_InputField zSize;
+    [SerializeField] TMP_Text text;
 
     //the multidimensional array to contain the createed cells
     MazeCell[,] mazeGrid;
@@ -187,6 +190,15 @@ public class MazeGeneration : MonoBehaviour
                 yield return StartCoroutine(GenerateMaze(visitedCells[visitedCells.Count - 1]));
             }
         }
+
+        text.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(5f);
+
+        text.gameObject.SetActive(false);
+
+        StopAllCoroutines();
+
     }
 
     public void Pause()
