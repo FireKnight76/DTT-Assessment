@@ -7,6 +7,7 @@ using UnityEngine;
 public class MazeGeneration : MonoBehaviour
 {
     [SerializeField] MazeCell cell;
+    [SerializeField] GameObject maze;
     [SerializeField] TMP_InputField xSize;
     [SerializeField] TMP_InputField zSize;
 
@@ -71,6 +72,8 @@ public class MazeGeneration : MonoBehaviour
 
                 currentCell.gridX = i;
                 currentCell.gridZ = j;
+
+                currentCell.transform.SetParent(maze.transform);
 
                 mazeGrid[i, j] = currentCell;
             }
