@@ -137,7 +137,7 @@ public class MazeGeneration : MonoBehaviour
         }
 
         //delays the method to show the generationa and prevent a StackOverflowException
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.01f);
 
         //checks if any of the spots next to the currentcell are available
         if (possibleCells.Count > 0)
@@ -187,9 +187,6 @@ public class MazeGeneration : MonoBehaviour
                 yield return StartCoroutine(GenerateMaze(visitedCells[visitedCells.Count - 1]));
             }
         }
-
-
-
     }
 
     public void Pause()
