@@ -24,6 +24,7 @@ public class CameraControls : MonoBehaviour
             {
                  _camera.orthographicSize -= zoomSpeed * Time.deltaTime;
             }
+            _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize, minZoom2D, maxZoom2D);
         }
         else
         {
@@ -36,6 +37,7 @@ public class CameraControls : MonoBehaviour
             {
                 _camera.fieldOfView -= zoomSpeed * Time.deltaTime;
             }
+            _camera.fieldOfView = Mathf.Clamp(_camera.fieldOfView, minZoom3D, maxZoom3D);
         }
 
 

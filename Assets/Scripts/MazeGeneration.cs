@@ -21,6 +21,7 @@ public class MazeGeneration : MonoBehaviour
     int z;
 
     bool createPath = false;
+    bool paused = false;
 
 
     public void StartMazeCreation()
@@ -40,7 +41,11 @@ public class MazeGeneration : MonoBehaviour
                 visitedCells.Clear();
                 completedCells.Clear();
 
-                StartCoroutine(GenerateMaze(mazeGrid[Random.Range(0, x), Random.Range(0, z)]));
+                MazeCell startCell = mazeGrid[Random.Range(0, x), Random.Range(0, z)];
+                startCell.SetState(cellState.Passed);
+                visitedCells.Add(startCell);
+
+                StartCoroutine(GenerateMaze(startCell));
 
                 createPath = false;
             }
@@ -74,6 +79,10 @@ public class MazeGeneration : MonoBehaviour
 
     private IEnumerator GenerateMaze(MazeCell currentcell)
     {
+        while (paused)
+        {
+            yield return null;
+        }
 
         List<int> possibleDirections = new List<int>();
         List<MazeCell> possibleCells = new List<MazeCell>();
@@ -136,6 +145,7 @@ public class MazeGeneration : MonoBehaviour
             //breaks down the walls between cells to create a visual path
             switch (possibleDirections[chosenDirection])
             {
+                //Checks which direction the path is going in and tears down the required walls between the cells to create a visual path
                 case 1:
                     chosenCell.RemoveLeftWall();
                     currentcell.RemoveRightWall();
@@ -155,14 +165,16 @@ public class MazeGeneration : MonoBehaviour
             }
 
 
-
+            //changes the color of the floor to indicate that the cells has been passed once and adds it to the list
             chosenCell.SetState(cellState.Passed);
             visitedCells.Add(chosenCell);
 
+            //calls the same function from the position of the new location
             yield return StartCoroutine(GenerateMaze(chosenCell));
         }
         else if (possibleCells.Count == 0)
         {
+            //Backtracks and sets the cell to complete so that it will not be passed again till it reaches a spot which has unpassed spots next to it to keep the maze going
             completedCells.Add(currentcell);
             visitedCells.Remove(currentcell);
             currentcell.SetState(cellState.Completed);
@@ -175,6 +187,30 @@ public class MazeGeneration : MonoBehaviour
 
 
 
+    }
+
+    public void Pause()
+    {
+        if (paused)
+        {
+            paused = false;
+        }
+        else if (!paused)
+        {
+            paused = true;
+        }
+    }
+
+    public void ChangeCamera()
+    {
+        if (Camera.main.orthographic)
+        {
+            Camera.main.orthographic = false;
+        }
+        else
+        {
+            Camera.main.orthographic = true;
+        }
     }
 
     void ClearCells()
