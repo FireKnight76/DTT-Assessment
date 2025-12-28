@@ -1,10 +1,7 @@
-using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class MazeGeneration : MonoBehaviour
 {
@@ -36,15 +33,26 @@ public class MazeGeneration : MonoBehaviour
 
         if((x >= 10 && x <= 250) && (z >= 10 && z <= 250))
         {
+            //disables the text that the maze is complete if it is still on the screen when pressing the button
+            text.gameObject.SetActive(false);
+
+            //calls the method to remove all cells before generating new ones
             ClearCells();
 
+            //prevents the error that the a cells mesh can not be accessed because it has been destroyed
+            StopAllCoroutines();
+
+            //generates the grid
             GenerateGrid(x, z);
 
+            //makes sure there is only one path being generated
             if (createPath)
             {
+                //clears the lists to prevent problems from occuring
                 visitedCells.Clear();
                 completedCells.Clear();
 
+                //selects a random cell in the grid and marks the state as Passed while adding it to the visitedCells list to keep it from forming a loop
                 MazeCell startCell = mazeGrid[Random.Range(0, x), Random.Range(0, z)];
                 startCell.SetState(cellState.Passed);
                 visitedCells.Add(startCell);
@@ -83,20 +91,24 @@ public class MazeGeneration : MonoBehaviour
         }
     }
 
+    //method used to create the path of the maze
     private IEnumerator GenerateMaze(MazeCell currentcell)
     {
+        //returns null as long as paused is true which stops the coroutine creating a pausing effect
         while (paused)
         {
             yield return null;
         }
 
+        //creates the lists that are used to check if there are any spots for the cell to "move" to
         List<int> possibleDirections = new List<int>();
         List<MazeCell> possibleCells = new List<MazeCell>();
 
+        //gets the location of the MazeCell in the mazeGrid
         int x = (int) currentcell.gridX;
         int z = (int) currentcell.gridZ;
 
-        //Checks if the cell is all the way on the right
+        //checks if the cell is all the way on the right
         if (x < this.x - 1)
         {
             //checks if the cell has already been visited or is done, same for every other one
@@ -185,22 +197,27 @@ public class MazeGeneration : MonoBehaviour
             visitedCells.Remove(currentcell);
             currentcell.SetState(cellState.Completed);
 
+
             if (visitedCells.Count > 0)
             {
                 yield return StartCoroutine(GenerateMaze(visitedCells[visitedCells.Count - 1]));
             }
         }
 
+
+        //enables the text and waits for 5 seconds before disabling it again
         text.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(5f);
 
         text.gameObject.SetActive(false);
 
+        //Stops all coroutines since the coroutine needs to run once for every cell that has been instantiated
         StopAllCoroutines();
 
     }
 
+    //pauses the generation of the maze by enabling the loop
     public void Pause()
     {
         if (paused)
@@ -213,6 +230,7 @@ public class MazeGeneration : MonoBehaviour
         }
     }
 
+    //checks the projection of the camera and flips it
     public void ChangeCamera()
     {
         if (Camera.main.orthographic)
@@ -225,6 +243,7 @@ public class MazeGeneration : MonoBehaviour
         }
     }
 
+    //Removes all the cells in unity to 
     void ClearCells()
     {
         clearCells = GameObject.FindGameObjectsWithTag("MazeCell");

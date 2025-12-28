@@ -15,6 +15,7 @@ public class MazeCell : MonoBehaviour
     [SerializeField] private GameObject NegZWall;
     [SerializeField] private MeshRenderer floor;
 
+    //stores the location of the instance of the MazeCell in the mazeGrid array
     public int gridX;
     public int gridZ;
 
@@ -40,6 +41,7 @@ public class MazeCell : MonoBehaviour
 
     public void SetState(cellState state)
     {
+        //checks the state of the MazeCell and gives it a color to create a visual representation
         switch (state)
         {
             case cellState.Available:

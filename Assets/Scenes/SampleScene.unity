@@ -339,7 +339,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraControls
   _camera: {fileID: 330585545}
   cameraSpeed: 20
-  zoomSpeed: 50
+  zoomSpeed: 100
   minZoom2D: 10
   maxZoom2D: 100
   minZoom3D: 10

@@ -11,8 +11,10 @@ public class CameraControls : MonoBehaviour
     [SerializeField] float maxZoom3D;
     [SerializeField] float cameraSensitivity;
 
+    //variable to counter the Update method resetting the camera every frame the mouse is not moving
     float xRotation = 0;
 
+    //bool to check if the user has full control over the camera
     bool cameraControl = false;
 
     // Update is called once per frame
@@ -47,7 +49,7 @@ public class CameraControls : MonoBehaviour
             {
                  _camera.orthographicSize -= zoomSpeed * Time.deltaTime;
             }
-            //prevents the zoom effect of the camera from going too far
+            //prevents the zoom effect of the orthographic camera from going too far
             _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize, minZoom2D, maxZoom2D);
         }
         else
@@ -63,6 +65,7 @@ public class CameraControls : MonoBehaviour
             {
                 _camera.fieldOfView -= zoomSpeed * Time.deltaTime;
             }
+            //prevents the field of view of the camera from going too far
             _camera.fieldOfView = Mathf.Clamp(_camera.fieldOfView, minZoom3D, maxZoom3D);
             
             //checks if the user wants control of the camera rotation
@@ -72,7 +75,7 @@ public class CameraControls : MonoBehaviour
                 float mouseX = Input.GetAxis("Mouse X") * cameraSensitivity * Time.deltaTime;
                 float mouseY = Input.GetAxis("Mouse Y") * cameraSensitivity * Time.deltaTime;
 
-                //turns the float from mouseY into a value that can be applied to a Maathf.Clamp
+                //turns the float from mouseY into a value that can be applied to a Mathf.Clamp
                 xRotation -= mouseY;
                 //limits the rotation to a minimum of -90 and 90
                 xRotation = Mathf.Clamp(xRotation, -90f, 90f);
@@ -84,6 +87,7 @@ public class CameraControls : MonoBehaviour
             }
         }
 
+        //moves the user with the inputs 
         transform.Translate(new Vector3(moveX, moveY, moveZ));
     }
 
@@ -91,12 +95,14 @@ public class CameraControls : MonoBehaviour
     {
         if (!cameraControl && !_camera.orthographic)
         {
+            //locks the cursor in place and hides it for a more visually pleasing view of the maze
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             cameraControl = true;
         }
         else if (cameraControl && !_camera.orthographic) 
         {
+            //undoes the locked and invisible mouse so that the user can click the buttons again
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             cameraControl = false;
