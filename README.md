@@ -1,6 +1,6 @@
 # Perfect Maze Generator (Unity)
 
-##[Demo Video](https://youtu.be/Q7e8uEJlCSo)
+## [Demo Video](https://youtu.be/Q7e8uEJlCSo)
 
 ## Description 
 This project was my take on a _**perfect maze**_ generator using Unity and C#. This project utilizes a recursive backtracking method to check all available spots and goes back in the list if there are no empty spots left next to the current spot.
